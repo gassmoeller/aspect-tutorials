@@ -1,0 +1,15 @@
+
+set End time = 0
+set Nonlinear solver scheme = no Advection, no Stokes
+
+subsection Geometry model
+  set Model name = box
+end
+
+subsection Material model
+  set Model name = simpler
+end
+
+subsection Gravity model
+  set Model name = vertical
+end 

@@ -96,7 +96,8 @@ end
 # We then also have to prescribe the boundary conditions for the
 # velocity. Here, at all 4 boundaries we want the velocity to be tangential.
 subsection Boundary velocity model
-  set Tangential velocity boundary indicators = 0,1,2,3
+  set Zero velocity boundary indicators =
+  set Tangential velocity boundary indicators = left, right, top, bottom
 end
 
 
@@ -129,6 +130,7 @@ subsection Postprocess
   subsection Visualization
     set Time between graphical output = 1e7
     set Output format = vtu
+    set List of output variables = material properties
   end
   subsection Particles
     set Number of particles = 1000

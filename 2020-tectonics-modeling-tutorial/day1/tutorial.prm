@@ -6,7 +6,7 @@ set Dimension                              = 2
 # time system we want to work in and what the end time is. We
 # also designate an output directory.
 set Use years in output instead of seconds = true
-set End time                               = 5e10
+set End time                               = 3e10
 set Output directory                       = output
 
 

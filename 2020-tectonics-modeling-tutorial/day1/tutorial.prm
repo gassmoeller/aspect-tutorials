@@ -126,7 +126,7 @@ end
 # visualization. These output files are created every time
 # a time step crosses time points separated by 1e7 years.
 subsection Postprocess
-  set List of postprocessors = velocity statistics, temperature statistics, heat flux statistics , visualization, particles, basic statistics
+  set List of postprocessors = velocity statistics, temperature statistics, heat flux statistics, visualization, particles, basic statistics
   subsection Visualization
     set Time between graphical output = 1e7
     set Output format = vtu

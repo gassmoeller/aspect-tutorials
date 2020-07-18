@@ -1,0 +1,203 @@
+# 2D 
+set Dimension                              = 2
+# Run for 15 My
+set Start time                             = 0
+set End time                               = 15.01e6   
+set CFL number                             = 1
+set Use years in output instead of seconds = true
+# Linear solver
+set Nonlinear solver scheme                = single Advection, single Stokes
+set Output directory                       = prescribed_subduction/
+set Adiabatic surface temperature          = 0
+
+
+# We use the cheap Stokes preconditioner
+# to speed things up.
+subsection Solver parameters
+  subsection Stokes solver parameters
+    set Linear solver tolerance = 1e-6
+    set Number of cheap Stokes solver steps = 200
+  end
+end
+
+
+# We consider a 2D box of 3000x670 km.
+# With 4 X repetitions we aim for a mesh
+# cell aspect ratio of ~1:1.
+subsection Geometry model
+  set Model name = box 
+
+  subsection Box
+    set X extent   = 3000e3
+    set Y extent   = 670e3
+    set X repetitions = 4
+  end
+
+end
+
+
+# We use the Boussinesq approximation
+# of the governing equations.
+subsection Formulation
+  set Formulation = Boussinesq approximation
+end
+
+
+# All boundaries are free slip, except for
+# the right boundary, where we prescribe
+# inflow of the oceanic subducting plate,
+# and outflow of the sublithospheric mantle,
+# with a gradual transition between in- and
+# outflow.
+subsection Boundary velocity model
+  set Tangential velocity boundary indicators = left, bottom, top 
+  set Prescribed velocity boundary indicators = right x:function 
+
+  subsection Function
+    set Function constants  = cm=100.0                                                        
+    set Function expression = if(z<540000.0, (600.0/550.0)/cm, \
+                                 if(z>560000.0, -5.0/cm, \ 
+                                    ((((-600.0/550.0)-5.0)/-20.0)*((z/1000.0)-560.0)+5.0)*(-1.0/cm))); \
+                              0 
+    set Variable names      = x,z     
+  end
+
+end
+
+
+# We fix temperature on the top and bottom,
+# as well as on the right boundary because 
+# we have inflow through the latter.
+subsection Boundary temperature model
+  set Fixed temperature boundary indicators   = bottom, top, right 
+  set List of model names = box 
+
+  subsection Box
+    set Bottom temperature = 0
+    set Left temperature   = 0
+    set Right temperature  = 0
+    set Top temperature    = 0
+  end
+
+end
+
+
+# We ignore any temperature effects
+subsection Initial temperature model
+  set List of model names = function 
+
+  subsection Function
+    set Function expression = 0
+    set Variable names      = x,y,t
+  end
+end
+
+
+# We fix composition on the right boundary,
+# because we have inflow there.
+subsection Boundary composition model
+  set Fixed composition boundary indicators = right          
+  set List of model names                   = initial composition 
+end
+
+
+# We include 3 materials that represent
+# 1) the overriding plate (OP)
+# 2) the mantle lithosphere of the subducting plate (ML_SP)
+# 3) the crust of the subducting plate (crust_SP)
+subsection Compositional fields
+  set Number of fields = 3
+  set Names of fields  = OP, ML_SP, crust_SP
+end
+
+
+# The crustal layer of the subducting plate separates 
+# it from the overriding plate at an 35 degree angle.
+subsection Initial composition model
+  set List of model names = function
+  subsection Function
+    set Function constants  = Ax=1451200.0, Az=670000.0, \
+                              Bx=1500000.0, Bz=670000.0, \
+                              Cx=1334100.0, Cz=588000.0, \
+                              Dx=1382900.0, Dz=588000.0, \
+                              Ex=1530000.0, Ez=560000.0, \
+                              Fz=663000.0, Gz=658000.0, \   
+                              Hz=631000.0, Iz=630000.0
+    set Function expression = \
+                              if(z>=Cz&z>=((Az-Cz)/(Ax-Cx)*(x-Cx)+Cz),1,0); \
+                              if((x>=Ex&z>=Ez&z<Gz)| \
+                                 (x<Ex&z<=((Bz-Dz)/(Bx-Dx)*(x-Dx)+Dz)&z<Gz&z>=((Ez-Dz)/(Ex-Dx)*(x-Dx)+Dz)),1,0); \
+                              if(z>=Cz&z>((Bz-Dz)/(Bx-Dx)*(x-Dx)+Dz)&z<((Az-Cz)/(Ax-Cx)*(x-Cx)+Cz)| \
+                                 z>=Gz&z<=((Bz-Dz)/(Bx-Dx)*(x-Dx)+Dz),1,0) 
+    set Variable names      = x,z
+  end
+end
+
+
+# The materials only vary in density and/or
+# viscosity. Both are constant per composition.
+subsection Material model
+  set Model name = multicomponent
+
+  subsection Multicomponent
+    set Reference temperature         = 0.0    
+    set Viscosity averaging scheme    = maximum composition 
+    # Note the order of the compositional fields: 
+    # background, OP, ML SP, crust SP
+    set Viscosities                   = 1e20, 1e23, 1e23, 1e20
+    set Densities                     = 3200, 3250, 3250, 3250
+    set Thermal conductivities        = 1
+  end
+
+end
+
+
+# We assume vertical gravity.
+subsection Gravity model
+  set Model name = vertical 
+  subsection Vertical
+    set Magnitude = 9.81 
+  end
+end
+
+
+# Using the minimum refinement function,
+# we make sure the crust and WZ, the plates
+# and the gradient in prescribed velocity
+# are well resolved at all times.
+# With the viscosity and composition strategies,
+# we follow the slab through the mantle. 
+subsection Mesh refinement
+  set Initial adaptive refinement              = 2     
+  set Initial global refinement                = 4
+  set Minimum refinement level                 = 2
+  set Normalize individual refinement criteria = true
+  set Refinement criteria merge operation      = plus
+  set Coarsening fraction                      = 0.10  
+  set Refinement fraction                      = 0.9
+  set Run postprocessors on initial refinement = false
+  set Strategy                                 = minimum refinement function, \
+                                                 viscosity, composition
+  set Time steps between mesh refinement       = 10
+
+  subsection Minimum refinement function
+    set Coordinate system = cartesian
+    set Variable names = x,z,t
+    set Function constants = vel=150e3, L=100e3, crust=10e3
+    set Function expression = if(x>=1350e3&670e3-z<crust,6,if(670e3-z<L,5,if(670e3-z<vel,4,1)))
+  end
+
+end
+
+
+# We track the root-mean-square velocity over time,
+# and produce ParaView output every half a million years.
+subsection Postprocess
+  set List of postprocessors = visualization, velocity statistics
+
+  subsection Visualization
+    set List of output variables      = density, viscosity, strain rate, error indicator
+    set Time between graphical output = 5e5
+  end
+
+end

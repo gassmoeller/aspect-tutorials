@@ -59,7 +59,7 @@ end
 # to be sticky air
 subsection Compositional fields
   set Number of fields                               = 5
-  set Names of fields                                = qsand,csand,bound,block, \
+  set Names of fields                                = qsand, csand, bound, block, \
                                                        total_strain
 end 
 
@@ -84,10 +84,10 @@ subsection Initial composition model
   set Model name                                     = function
 
   subsection Function
-    set Variable names                               = x,y
+    set Variable names                               = x, y
     set Function constants                           = w1=0.345, w2=0.355, \
-                                                     h1=0.002, h2=0.012, \
-                                                     h3=0.022, h4=0.032 
+                                                       h1=0.002, h2=0.012, \
+                                                       h3=0.022, h4=0.032 
     set Function expression = if((x<w1 & y<=h2 & y>h1) || (x< w1 & y>h3 & y<=h4), 1,0); \
                               if((x<w1 & y>h2 & y<=h3), 1,0); \
                               if((x>=w1 & x<=w2 & y>h1) ||(y<=h1), 1, 0); \
@@ -101,7 +101,7 @@ end
 # Temperature is set to 293 K on the top and
 # bottom boundaries.
 subsection Boundary temperature model
-  set Fixed temperature boundary indicators          = bottom, top
+  set Fixed temperature boundary indicators          = bottom, top, right
   set List of model names                            = initial temperature
 end
 
@@ -131,11 +131,11 @@ subsection Boundary velocity model
 # at the base of the rigid block to 0 cm/h at the base of the model.
   set Prescribed velocity boundary indicators        = right:function 
 
-    subsection Function
-      set Variable names                             = x,y
-      set Function constants                         = cm=0.01, h=3600, th=0.002
-      set Function expression                        = if(y>th, -2.5*cm/h, -(y/th)*2.5*cm/h); 0
-   end
+  subsection Function
+    set Variable names                               = x, y
+    set Function constants                           = cm=0.01, h=3600, th=0.002
+    set Function expression                          = if(y>th, -2.5*cm/h, -(y/th)*2.5*cm/h); 0
+  end
 
 end
 
@@ -234,9 +234,9 @@ subsection Mesh refinement
   set Time steps between mesh refinement             = 2
 
   subsection Minimum refinement function
-    set Coordinate system = cartesian
-    set Variable names = x,z,t
-    set Function constants = bound=0.0025, sand=0.037, block=0.34, block_r=0.36, cm=0.01, hour=3600
+    set Coordinate system                            = cartesian
+    set Variable names                               = x, z, t
+    set Function constants  = bound=0.0025, sand=0.037, block=0.34, block_r=0.36, cm=0.01, hour=3600
     set Function expression = if((z<=sand&x>0.08&x<=block-3*cm/hour*t)| \
                                  (x>block-3.5*cm/hour*t&x<block_r-2*cm/hour*t)| \
                                  z<=bound,2, \
@@ -244,9 +244,9 @@ subsection Mesh refinement
   end
 
   subsection Maximum refinement function
-    set Coordinate system = cartesian
-    set Variable names = x,z,t
-    set Function constants = sand=0.037
+    set Coordinate system                            = cartesian
+    set Variable names                               = x, z, t
+    set Function constants                           = sand=0.037
     set Function expression = \
                               if(z>sand&x<=0.08,0, \
                                  if(z<=sand&x<=0.08,1,2))

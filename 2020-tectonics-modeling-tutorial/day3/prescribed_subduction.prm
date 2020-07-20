@@ -15,7 +15,7 @@ set Adiabatic surface temperature          = 0
 # to speed things up.
 subsection Solver parameters
   subsection Stokes solver parameters
-    set Linear solver tolerance = 1e-6
+    set Linear solver tolerance             = 1e-6
     set Number of cheap Stokes solver steps = 200
   end
 end
@@ -25,11 +25,11 @@ end
 # With 4 X repetitions we aim for a mesh
 # cell aspect ratio of ~1:1.
 subsection Geometry model
-  set Model name = box 
+  set Model name      = box 
 
   subsection Box
-    set X extent   = 3000e3
-    set Y extent   = 670e3
+    set X extent      = 3000e3
+    set Y extent      = 670e3
     set X repetitions = 4
   end
 
@@ -59,7 +59,7 @@ subsection Boundary velocity model
                                  if(z>560000.0, -5.0/cm, \ 
                                     ((((-600.0/550.0)-5.0)/-20.0)*((z/1000.0)-560.0)+5.0)*(-1.0/cm))); \
                               0 
-    set Variable names      = x,z     
+    set Variable names      = x, z     
   end
 
 end
@@ -69,14 +69,14 @@ end
 # as well as on the right boundary because 
 # we have inflow through the latter.
 subsection Boundary temperature model
-  set Fixed temperature boundary indicators   = bottom, top, right 
-  set List of model names = box 
+  set Fixed temperature boundary indicators = bottom, top, right 
+  set List of model names                   = box 
 
   subsection Box
-    set Bottom temperature = 0
-    set Left temperature   = 0
-    set Right temperature  = 0
-    set Top temperature    = 0
+    set Bottom temperature                  = 0
+    set Left temperature                    = 0
+    set Right temperature                   = 0
+    set Top temperature                     = 0
   end
 
 end
@@ -84,11 +84,11 @@ end
 
 # We ignore any temperature effects
 subsection Initial temperature model
-  set List of model names = function 
+  set List of model names   = function 
 
   subsection Function
     set Function expression = 0
-    set Variable names      = x,y,t
+    set Variable names      = x, y, t
   end
 end
 
@@ -114,7 +114,8 @@ end
 # The crustal layer of the subducting plate separates 
 # it from the overriding plate at an 35 degree angle.
 subsection Initial composition model
-  set List of model names = function
+  set List of model names   = function
+
   subsection Function
     set Function constants  = Ax=1451200.0, Az=670000.0, \
                               Bx=1500000.0, Bz=670000.0, \
@@ -129,15 +130,16 @@ subsection Initial composition model
                                  (x<Ex&z<=((Bz-Dz)/(Bx-Dx)*(x-Dx)+Dz)&z<Gz&z>=((Ez-Dz)/(Ex-Dx)*(x-Dx)+Dz)),1,0); \
                               if(z>=Cz&z>((Bz-Dz)/(Bx-Dx)*(x-Dx)+Dz)&z<((Az-Cz)/(Ax-Cx)*(x-Cx)+Cz)| \
                                  z>=Gz&z<=((Bz-Dz)/(Bx-Dx)*(x-Dx)+Dz),1,0) 
-    set Variable names      = x,z
+    set Variable names      = x, z
   end
+
 end
 
 
 # The materials only vary in density and/or
 # viscosity. Both are constant per composition.
 subsection Material model
-  set Model name = multicomponent
+  set Model name                      = multicomponent
 
   subsection Multicomponent
     set Reference temperature         = 0.0    
@@ -154,10 +156,12 @@ end
 
 # We assume vertical gravity.
 subsection Gravity model
-  set Model name = vertical 
+  set Model name  = vertical 
+
   subsection Vertical
     set Magnitude = 9.81 
   end
+
 end
 
 
@@ -181,9 +185,9 @@ subsection Mesh refinement
   set Time steps between mesh refinement       = 10
 
   subsection Minimum refinement function
-    set Coordinate system = cartesian
-    set Variable names = x,z,t
-    set Function constants = vel=150e3, L=100e3, crust=10e3
+    set Coordinate system   = cartesian
+    set Variable names      = x, z, t
+    set Function constants  = vel=150e3, L=100e3, crust=10e3
     set Function expression = if(x>=1350e3&670e3-z<crust,6,if(670e3-z<L,5,if(670e3-z<vel,4,1)))
   end
 
@@ -193,7 +197,7 @@ end
 # We track the root-mean-square velocity over time,
 # and produce ParaView output every half a million years.
 subsection Postprocess
-  set List of postprocessors = visualization, velocity statistics
+  set List of postprocessors          = visualization, velocity statistics
 
   subsection Visualization
     set List of output variables      = density, viscosity, strain rate, error indicator

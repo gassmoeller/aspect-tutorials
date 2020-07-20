@@ -1,0 +1,34 @@
+{
+  "version":"0.3",
+  "coordinate system":{"model":"cartesian"},
+  "cross section":[[0,-100e3],[0,50e3]],
+  "features":
+  [
+    { "model":"continental plate", "name":"Eurasia", "max depth":150e3,
+      "coordinates" :[[0,0],[0,600e3 ],[200e3,600e3],[200e3 ,0]],
+      "temperature models":[{"model":"linear", "max depth":150e3}],
+      "composition models":[ 
+        {"model":"uniform", "compositions":[1], "max depth":50e3},
+        {"model":"uniform", "fractions":[0.25,0.75], "compositions":[0,2], 
+         "min depth":50e3, "max depth":100e3},
+        {"model":"uniform", "compositions":[2], "min depth":100e3}]
+    },
+    { 
+      "model":"oceanic plate", "name":"Atlantic", "max depth":100e3,
+      "coordinates" :[[0,0],[0,-100e3 ],[200e3,-100e3],[200e3 ,0]],
+      "temperature models":[{"model":"linear", "max depth":100e3}],
+      "composition models":[
+        {"model":"uniform","compositions":[0], "max depth":25e3},
+        {"model":"uniform","compositions":[1], "min depth":25e3}]
+    },
+    {
+      "model":"subducting plate", "name":"Antilles slab", "dip point":[50e4,1e3],
+      "coordinates":[[0,0],[200e3,0]],
+      "segments":[{"length":500e3, "thickness":[100e3], "angle":[40]}],
+      "temperature models":[{"model":"linear", "max distance slab top":100e3}],
+      "composition models":[
+        {"model":"uniform","compositions":[0], "max distance slab top":25e3},
+        {"model":"uniform","compositions":[1], "min distance slab top":25e3}]
+    }
+  ]
+}

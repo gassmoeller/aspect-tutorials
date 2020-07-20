@@ -1,0 +1,24 @@
+{
+  "version":"0.3",
+  "coordinate system":{"model":"cartesian"},
+  "cross section":[[0,-50e3],[100e3,-50e3]],
+  "features":
+  [
+    { "model":"continental plate", "name":"Eurasia", "max depth":150e3,
+      "coordinates" :[[0,0],[0,100e3 ],[200e3,100e3],[200e3 ,0]],
+      "temperature models":[{"model":"linear", "max depth":150e3}],
+      "composition models":
+      [ {"model":"uniform", "compositions":[1], "max depth":50e3},
+        {"model":"uniform", "fractions":[0.25,0.75], "compositions":[0,2], 
+         "min depth":50e3, "max depth":100e3},
+        {"model":"uniform", "compositions":[2], "min depth":100e3}]
+    },
+    { "model":"oceanic plate", "name":"Atlantic", "max depth":150e3,
+      "coordinates" :[[0,0],[0,-100e3 ],[200e3,-100e3],[200e3 ,0]],
+      "temperature models":[
+        {"model":"plate model", "max depth":150e3, "spreading velocity":0.005,
+         "ridge coordinates": [[150e3,0],[150e3,-100e3]]}
+       ]
+    }
+  ]
+}

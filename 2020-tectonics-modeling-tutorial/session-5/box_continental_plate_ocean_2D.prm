@@ -1,0 +1,51 @@
+#### World Builder parameters which can be used by ASPECT ####
+set World builder file = box_continental_plate_ocean_2D.wb
+
+subsection Initial temperature model
+    set Model name = world builder
+end
+
+subsection Initial composition model
+    set Model name = world builder
+end
+
+#### parameters needed by ASPECT when using compositions ####
+subsection Compositional fields
+   set Number of fields = 3
+end
+
+#### parameteres needed to actually output temperature and compostion ####
+set Output directory = box_continental_plate_ocean_2D
+subsection Postprocess
+  set List of postprocessors = visualization
+  subsection Visualization
+    set List of output variables = depth
+  end
+end 
+
+#### increasing the mesh refinement ####
+subsection Mesh refinement
+  set Initial global refinement = 4
+end
+#### other parameters needed by ASPECT #####
+set Dimension = 2
+set End time = 0
+set Nonlinear solver scheme = no Advection, no Stokes
+
+subsection Geometry model
+  set Model name = box
+  subsection Box
+    set X extent = 200e3
+    set Y extent = 200e3
+    set Z extent = 200e3
+    set Box origin Y coordinate = -100e3
+  end
+end
+
+subsection Material model
+  set Model name = simpler
+end
+
+subsection Gravity model
+  set Model name = vertical
+end 

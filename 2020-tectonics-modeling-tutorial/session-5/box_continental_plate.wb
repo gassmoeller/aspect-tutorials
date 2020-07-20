@@ -1,0 +1,16 @@
+{
+  "version":"0.3",
+  "coordinate system":{"model":"cartesian"},
+  "features":
+  [
+    {
+      "model":"continental plate", "name":"Eurasia",
+      "coordinates" :[[0,0],[0,100e3 ],[200e3,100e3],[200e3 ,0]],
+      "temperature models":[{"model":"uniform", "temperature":293}],
+      "composition models":
+      [
+        {"model":"uniform", "compositions":[1]}
+      ]
+    }
+  ]
+}

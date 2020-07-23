@@ -1,0 +1,57 @@
+#### World Builder parameters which can be used by ASPECT ####
+set World builder file = RFM-11-2D.wb
+
+subsection Initial temperature model
+    set Model name = world builder
+end
+
+subsection Initial composition model
+    set Model name = world builder
+end
+
+#### parameters needed by ASPECT when using compositions ####
+subsection Compositional fields
+   set Number of fields = 5
+end
+
+#### parameteres needed to actually output temperature and compostion ####
+set Output directory = RFM-11-2D
+subsection Postprocess
+  set List of postprocessors = visualization
+  subsection Visualization
+    set List of output variables = depth
+  end
+end 
+
+#### increasing the mesh refinement ####
+subsection Mesh refinement
+  set Initial global refinement = 4
+  set Initial adaptive refinement = 2
+  set Strategy = composition threshold
+  set Skip solvers on initial refinement = true
+  subsection Composition threshold
+    set Compositional field thresholds = 0.1,0.1,0.1,0.1,2 #1,1,1,1,0
+  end
+end
+#### other parameters needed by ASPECT #####
+set Dimension = 2
+set End time = 0
+set Nonlinear solver scheme = no Advection, no Stokes
+
+subsection Geometry model
+  set Model name = box
+  subsection Box
+    set X extent = 2000e3
+    set Y extent = 500e3
+    set X repetitions = 4
+    set Y repetitions = 1
+  end
+end
+
+subsection Material model
+  set Model name = simpler
+end
+
+subsection Gravity model
+  set Model name = vertical
+end 

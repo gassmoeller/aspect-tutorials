@@ -1,0 +1,58 @@
+#### World Builder parameters which can be used by ASPECT ####
+set World builder file = RFM-6-mantle.wb
+
+subsection Initial temperature model
+    set Model name = world builder
+end
+
+subsection Initial composition model
+    set Model name = world builder
+end
+
+#### parameters needed by ASPECT when using compositions ####
+subsection Compositional fields
+   set Number of fields = 5
+end
+
+#### parameteres needed to actually output temperature and compostion ####
+set Output directory = RFM-6-mantle
+subsection Postprocess
+  set List of postprocessors = visualization
+  subsection Visualization
+    set List of output variables = depth
+  end
+end 
+
+#### increasing the mesh refinement ####
+subsection Mesh refinement
+  set Initial global refinement = 2
+  set Initial adaptive refinement = 2
+  set Strategy = composition threshold
+  subsection Composition threshold
+    set Compositional field thresholds = 0.1,0.1,0.1,0.1,2 
+  end
+end
+
+#### other parameters needed by ASPECT #####
+set Dimension = 3
+set End time = 0
+set Nonlinear solver scheme = no Advection, no Stokes
+
+subsection Geometry model
+  set Model name = box
+  subsection Box
+    set X extent = 2000e3
+    set Y extent = 1000e3
+    set Z extent = 500e3
+    set X repetitions = 4
+    set Y repetitions = 2
+  end
+end
+
+subsection Material model
+  set Model name = simpler
+end
+
+subsection Gravity model
+  set Model name = vertical
+end 
